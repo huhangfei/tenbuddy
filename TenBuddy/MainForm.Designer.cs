@@ -44,6 +44,8 @@
             txtTargetIntroduction = new TextBox();
             btnModelConfig = new Button();
             btnInstructPresetConfig = new Button();
+            enableAutoReply = new CheckBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // CheckTimer
@@ -56,25 +58,28 @@
             // 
             lbTargetName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lbTargetName.AutoEllipsis = true;
-            lbTargetName.Location = new Point(12, 18);
+            lbTargetName.Location = new Point(15, 21);
+            lbTargetName.Margin = new Padding(4, 0, 4, 0);
             lbTargetName.Name = "lbTargetName";
-            lbTargetName.Size = new Size(275, 23);
+            lbTargetName.Size = new Size(354, 27);
             lbTargetName.TabIndex = 1;
             lbTargetName.Text = "正在识别聊天窗口";
             // 
             // lbMessageCount
             // 
-            lbMessageCount.Location = new Point(12, 80);
+            lbMessageCount.Location = new Point(15, 94);
+            lbMessageCount.Margin = new Padding(4, 0, 4, 0);
             lbMessageCount.Name = "lbMessageCount";
-            lbMessageCount.Size = new Size(108, 23);
+            lbMessageCount.Size = new Size(139, 27);
             lbMessageCount.TabIndex = 2;
             lbMessageCount.Text = "当前消息：000";
             // 
             // btnReadMessages
             // 
-            btnReadMessages.Location = new Point(126, 77);
+            btnReadMessages.Location = new Point(162, 91);
+            btnReadMessages.Margin = new Padding(4);
             btnReadMessages.Name = "btnReadMessages";
-            btnReadMessages.Size = new Size(75, 23);
+            btnReadMessages.Size = new Size(96, 27);
             btnReadMessages.TabIndex = 3;
             btnReadMessages.Text = "读取更多";
             btnReadMessages.UseVisualStyleBackColor = true;
@@ -82,9 +87,10 @@
             // 
             // btnViewMessages
             // 
-            btnViewMessages.Location = new Point(207, 77);
+            btnViewMessages.Location = new Point(266, 91);
+            btnViewMessages.Margin = new Padding(4);
             btnViewMessages.Name = "btnViewMessages";
-            btnViewMessages.Size = new Size(75, 23);
+            btnViewMessages.Size = new Size(96, 27);
             btnViewMessages.TabIndex = 4;
             btnViewMessages.Text = "查看内容";
             btnViewMessages.UseVisualStyleBackColor = true;
@@ -94,18 +100,20 @@
             // 
             comboQuestion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             comboQuestion.FormattingEnabled = true;
-            comboQuestion.Location = new Point(74, 153);
+            comboQuestion.Location = new Point(95, 180);
+            comboQuestion.Margin = new Padding(4);
             comboQuestion.Name = "comboQuestion";
-            comboQuestion.Size = new Size(294, 25);
+            comboQuestion.Size = new Size(377, 28);
             comboQuestion.TabIndex = 8;
             comboQuestion.KeyPress += comboQuestion_KeyPress;
             // 
             // btnRequest
             // 
             btnRequest.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnRequest.Location = new Point(374, 153);
+            btnRequest.Location = new Point(481, 180);
+            btnRequest.Margin = new Padding(4);
             btnRequest.Name = "btnRequest";
-            btnRequest.Size = new Size(75, 25);
+            btnRequest.Size = new Size(96, 29);
             btnRequest.TabIndex = 9;
             btnRequest.Text = "请求";
             btnRequest.UseVisualStyleBackColor = true;
@@ -114,9 +122,10 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 157);
+            label1.Location = new Point(15, 185);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(48, 17);
+            label1.Size = new Size(58, 20);
             label1.TabIndex = 10;
             label1.Text = "AI 对话";
             // 
@@ -124,38 +133,42 @@
             // 
             lbInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lbInput.AutoEllipsis = true;
-            lbInput.Location = new Point(12, 117);
+            lbInput.Location = new Point(15, 138);
+            lbInput.Margin = new Padding(4, 0, 4, 0);
             lbInput.Name = "lbInput";
-            lbInput.Size = new Size(437, 23);
+            lbInput.Size = new Size(562, 27);
             lbInput.TabIndex = 2;
             lbInput.Text = "当前输入：空";
             // 
             // richTextBox1
             // 
             richTextBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            richTextBox1.Location = new Point(12, 184);
+            richTextBox1.Location = new Point(15, 216);
+            richTextBox1.Margin = new Padding(4);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.ReadOnly = true;
-            richTextBox1.Size = new Size(437, 297);
+            richTextBox1.Size = new Size(561, 349);
             richTextBox1.TabIndex = 12;
             richTextBox1.Text = "";
             // 
             // txtTargetIntroduction
             // 
             txtTargetIntroduction.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtTargetIntroduction.Location = new Point(12, 44);
+            txtTargetIntroduction.Location = new Point(15, 52);
+            txtTargetIntroduction.Margin = new Padding(4);
             txtTargetIntroduction.Name = "txtTargetIntroduction";
             txtTargetIntroduction.PlaceholderText = "可填写人物描述，比如双方关系，对话目的，或使用什么语气进行交谈。";
-            txtTargetIntroduction.Size = new Size(437, 23);
+            txtTargetIntroduction.Size = new Size(561, 27);
             txtTargetIntroduction.TabIndex = 13;
             txtTargetIntroduction.TextChanged += txtTargetIntroduction_TextChanged;
             // 
             // btnModelConfig
             // 
             btnModelConfig.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnModelConfig.Location = new Point(374, 12);
+            btnModelConfig.Location = new Point(481, 14);
+            btnModelConfig.Margin = new Padding(4);
             btnModelConfig.Name = "btnModelConfig";
-            btnModelConfig.Size = new Size(75, 26);
+            btnModelConfig.Size = new Size(96, 31);
             btnModelConfig.TabIndex = 14;
             btnModelConfig.Text = "模型配置";
             btnModelConfig.UseVisualStyleBackColor = true;
@@ -164,19 +177,42 @@
             // btnInstructPresetConfig
             // 
             btnInstructPresetConfig.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnInstructPresetConfig.Location = new Point(293, 12);
+            btnInstructPresetConfig.Location = new Point(377, 14);
+            btnInstructPresetConfig.Margin = new Padding(4);
             btnInstructPresetConfig.Name = "btnInstructPresetConfig";
-            btnInstructPresetConfig.Size = new Size(75, 26);
+            btnInstructPresetConfig.Size = new Size(96, 31);
             btnInstructPresetConfig.TabIndex = 14;
             btnInstructPresetConfig.Text = "指令预设";
             btnInstructPresetConfig.UseVisualStyleBackColor = true;
             btnInstructPresetConfig.Click += btnInstructPresetConfig_Click;
             // 
+            // enableAutoReply
+            // 
+            enableAutoReply.AutoSize = true;
+            enableAutoReply.Location = new Point(390, 94);
+            enableAutoReply.Name = "enableAutoReply";
+            enableAutoReply.Size = new Size(121, 24);
+            enableAutoReply.TabIndex = 15;
+            enableAutoReply.Text = "开启自动回复";
+            enableAutoReply.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(517, 89);
+            button1.Name = "button1";
+            button1.Size = new Size(58, 29);
+            button1.TabIndex = 16;
+            button1.Text = "测试";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 17F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(461, 503);
+            ClientSize = new Size(593, 592);
+            Controls.Add(button1);
+            Controls.Add(enableAutoReply);
             Controls.Add(btnInstructPresetConfig);
             Controls.Add(btnModelConfig);
             Controls.Add(txtTargetIntroduction);
@@ -190,7 +226,8 @@
             Controls.Add(lbMessageCount);
             Controls.Add(lbTargetName);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(420, 420);
+            Margin = new Padding(4);
+            MinimumSize = new Size(535, 486);
             Name = "MainForm";
             Text = "TenBuddy";
             FormClosing += MainForm_FormClosing;
@@ -215,5 +252,7 @@
         private TextBox txtTargetIntroduction;
         private Button btnModelConfig;
         private Button btnInstructPresetConfig;
+        private CheckBox enableAutoReply;
+        private Button button1;
     }
 }

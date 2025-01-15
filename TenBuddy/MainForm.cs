@@ -9,6 +9,7 @@ namespace TenBuddy
     using OpenAI;
     using OpenAI.Chat;
     using System.Text.Encodings.Web;
+    using System.Speech.Recognition;
 
     public partial class MainForm : Form,
         IUIAutomationPropertyChangedEventHandler,
@@ -29,7 +30,8 @@ namespace TenBuddy
             try
             {
                 Settings.Instance.Load();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("加载配置文件失败：" + ex.Message);
             }
@@ -178,7 +180,6 @@ namespace TenBuddy
                 {
                     return;
                 }
-
                 string text = valuePattern.CurrentValue;
                 if (text == this.currentChat.InputValue)
                 {
@@ -225,7 +226,7 @@ namespace TenBuddy
             }
             this.comboQuestion.Text = presets.FirstOrDefault();
         }
-
+        private string lastMsg = "";
         private void UpdateMessageList()
         {
             var startTime = DateTime.Now;
@@ -294,6 +295,115 @@ namespace TenBuddy
             {
                 this.lbMessageCount.Text = "当前消息：" + this.currentChat.Messages.Count;
             }));
+
+            if (enableAutoReply.Checked)
+            {
+                if (this.currentChat.Messages.Any() && !this.currentChat.Messages.Last().Equals(lastMsg))
+                {
+                    if (this.currentChat.Messages.Last().IndexOf(this.userName) != 0)
+                    {
+                        lastMsg = this.currentChat.Messages.Last();
+                        //开启自动回复了
+                        AutoReply();
+                    }
+
+                }
+
+            }
+        }
+        private bool autoReplying = false;
+        private async void AutoReply(bool noSend=false)
+        {
+            if (autoReplying)
+            {
+                return;
+            }
+            try
+            {
+                var chat = this.currentChat;
+                if (chat == null)
+                {
+                    return;
+                }
+                IUIAutomationValuePattern? valuePattern = this.editElement?.GetCurrentPattern(UIA_PatternIds.UIA_ValuePatternId) as IUIAutomationValuePattern;
+                if (valuePattern == null)
+                {
+                    return;
+                }
+
+
+                var parts = new List<string>();
+                parts.Add("# 角色介绍");
+                if (chat.IsGroup)
+                {
+                    parts.Add(string.Format("我的名字是“{0}”，是群“{1}”的成员。", this.userName, chat.Name));
+                }
+                else
+                {
+                    parts.Add(string.Format("我的名字是“{0}”，“对方的名字是“{1}”。", this.userName, chat.Name));
+                }
+                parts.Add("#我们的对话内容");
+                parts.AddRange(chat.Messages);
+
+                string userQuestion = string.Join("\n\n", parts);
+
+                var messages = new List<OpenAI.Chat.Message>();
+
+
+                string system = "根据下面这些聊天信息，回复一句话。";
+
+                if (!string.IsNullOrEmpty(txtTargetIntroduction.Text))
+                {
+                    system += "这是一些要求：" + txtTargetIntroduction.Text;
+                }
+                messages.Add(new OpenAI.Chat.Message(Role.System, system));
+                messages.Add(new OpenAI.Chat.Message(Role.User, userQuestion));
+
+                var inferenceServer = Settings.Instance.InferenceServer;
+                var settings = new OpenAIClientSettings(domain: inferenceServer.ApiHost, apiVersion: inferenceServer.ApiVersion);
+                var auth = new OpenAIAuthentication(inferenceServer.ApiToken);
+                using var client = new OpenAIClient(auth, settings);
+                var chatRequest = new ChatRequest(messages, model: inferenceServer.Model);
+                try
+                {
+
+                    richTextBox1.AppendText("\n最新消息：" + lastMsg + "\n");
+                    richTextBox1.AppendText("自动回答：");
+                    string replyMsg = "";
+                    await foreach (var partialResponse in client.ChatEndpoint.StreamCompletionEnumerableAsync(chatRequest))
+                    {
+                        foreach (var choice in partialResponse.Choices.Where(choice => choice.Delta?.Content != null))
+                        {
+                            replyMsg += choice.Delta.Content;
+
+                            richTextBox1.AppendText(choice.Delta.Content);
+                        }
+                        richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                    }
+
+                    RenderMarkdown();
+                    richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                    if (!string.IsNullOrEmpty(replyMsg) && !noSend)
+                    {
+                        valuePattern.SetValue(replyMsg);
+                        Clipboard.SetText(replyMsg);
+                        SendKeys.Send("^V");
+                        SendKeys.Send("{ENTER}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (!richTextBox1.IsDisposed)
+                    {
+                        richTextBox1.AppendText("请求失败：" + ex.Message);
+                    }
+                }
+            }
+            finally
+            {
+                autoReplying = false;
+            }
+
         }
 
         private void CheckWeChat()
@@ -498,7 +608,8 @@ namespace TenBuddy
                 RenderMarkdown();
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 btnRequest.Enabled = true;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 if (!richTextBox1.IsDisposed)
                 {
@@ -516,7 +627,8 @@ namespace TenBuddy
                 if (value == string.Empty)
                 {
                     Settings.Instance.ChatIntroductions.Remove(name);
-                } else
+                }
+                else
                 {
                     Settings.Instance.ChatIntroductions[name] = txtTargetIntroduction.Text;
                 }
@@ -555,6 +667,14 @@ namespace TenBuddy
         {
             var form = new LLMConfigureForm();
             form.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Invoke(() =>
+            {
+                AutoReply(true);
+            });
         }
     }
 }
